@@ -2,9 +2,25 @@ pipeline {
     agent any
 
     stages {
-        stage('initial') {
+        stage('Build in docker container') {
+            agent{
+                docker{
+                    image "node:18-alpine"
+                    reuseNode true
+
+                }
+            }
             steps {
-                sh 'echo "starting a new pipeline.."'
+                sh '''
+                echo "starting build"'
+                ls -la
+                node --version
+                npm --version
+                npm ci
+                npm run build
+                ls -la
+                '''
+                
             }
         }
 }
